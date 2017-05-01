@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 
 import tel_ran.collections.predicates.PredicateEquals;
 
-public class Array implements Iterable<Object>{
+public class Array implements Iterable<Object> {
 	public final static int CAPACITY = 10;
 	private int size;
 	private int capacity = CAPACITY;
@@ -66,11 +66,12 @@ public class Array implements Iterable<Object>{
 		return true;
 	}
 
-	public boolean removeLast() {
+	public Object removeLast() {
 		if (size <= 0)
-			return false;
-		array[--size] = null;
-		return true;
+			return null;
+		Object ret = array[--size];
+		array[size] = null;
+		return ret;
 	}
 
 	public Object remove(int index) {
@@ -78,11 +79,13 @@ public class Array implements Iterable<Object>{
 		if (index < 0 || index >= size) {
 			return null;
 		}
+		Object tmp = array[index];
+
 		for (int i = index; i < size; i++) {
 			array[i] = array[i + 1];
 		}
-		Object tmp = array[size - 1];
-		array[size--] = null;
+		array[--size] = null;
+
 		return tmp;
 	}
 
@@ -199,7 +202,7 @@ public class Array implements Iterable<Object>{
 // 2) функция public Array filter(Predicat<Object> p)
 // 3) функция public Array removeIf(Predicat<Object> p)
 
-//дз (30.04.2017) Array
-//1) Array + Iterable:Iterator
-//2) test Iterable:Iterator
-//3) test SUM with Iterable:Iterator
+// дз (30.04.2017) Array
+// 1) Array + Iterable:Iterator
+// 2) test Iterable:Iterator
+// 3) test SUM with Iterable:Iterator

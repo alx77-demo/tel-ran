@@ -2,12 +2,12 @@ package tel_ran.collections;
 
 import java.util.function.Consumer;
 
-public class SumConsumer implements Consumer<Integer> {
+public class SumConsumer implements Consumer<Object> {
 	int sum = 0;
 
 	@Override
-	public void accept(Integer t) {
-		sum += t;
+	public void accept(Object t) {
+		sum += (int) t;
 	}
 
 	public int getSum() {
