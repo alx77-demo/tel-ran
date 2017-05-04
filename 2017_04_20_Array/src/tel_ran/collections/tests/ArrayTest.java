@@ -159,4 +159,12 @@ public class ArrayTest {
 		array.forEach(sumConsumer);
 		assertEquals(sum, sumConsumer.getSum());
 	}
+
+	@Test
+	public void testIterable() {
+		int index = 0;
+		for (Object number : array) {
+			assertEquals(index++, (int) number);
+		}
+	}
 }
