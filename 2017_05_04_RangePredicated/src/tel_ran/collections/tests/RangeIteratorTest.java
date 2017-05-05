@@ -2,6 +2,8 @@ package tel_ran.collections.tests;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Iterator;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -30,6 +32,11 @@ public class RangeIteratorTest {
 			assertEquals(current, number);
 			current += 2;
 		}
+		Iterator<Integer> iterator;
+		for (iterator = rp.iterator(); iterator.hasNext();) {
+			iterator.next();
+		}
+		assertEquals(-1, (int) iterator.next());
 	}
 
 	@Test
