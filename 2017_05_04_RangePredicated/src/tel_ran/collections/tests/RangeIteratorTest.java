@@ -11,33 +11,31 @@ import tel_ran.collections.predicates.PredicateEven;
 public class RangeIteratorTest {
 	private static final Integer MIN_NUMBER = 10;
 	private static final Integer MAX_NUMBER = 20;
-	RangePredicated RangePredicated;
+	RangePredicated rp;
 	private int sum;
 
 	@Before
 	public void setUp() throws Exception {
-		RangePredicated = new RangePredicated(MIN_NUMBER, MAX_NUMBER, new PredicateEven());
+		rp = new RangePredicated(MIN_NUMBER, MAX_NUMBER, new PredicateEven());
 		sum = 0;
 		for (int num = MIN_NUMBER; num <= MAX_NUMBER; num++) {
-			sum += num;
+			sum += (num % 2 == 0) ? num : 0;
 		}
-		sum/=2;
 	}
 
 	@Test
 	public void testIterable() {
 		int current = MIN_NUMBER;
-		for (int number : RangePredicated) {
-			System.out.println(number);
-			//assertEquals(current++, number);
+		for (int number : rp) {
+			assertEquals(current, number);
+			current += 2;
 		}
-		//assertEquals(current, MAX_NUMBER + 1);
 	}
 
 	@Test
 	public void testForEach() {
 		SumConsumer sumConsumer = new SumConsumer();
-		RangePredicated.forEach(sumConsumer);
+		rp.forEach(sumConsumer);
 		assertEquals(sum, sumConsumer.getSum());
 	}
 }

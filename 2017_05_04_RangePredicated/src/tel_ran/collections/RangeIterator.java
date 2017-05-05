@@ -14,9 +14,12 @@ public class RangeIterator implements Iterator<Integer> {
 	@Override
 	public boolean hasNext() {
 		int tmpPointer = pointer;
-		while(tmpPointer <= self.getHigher())
-		{
-			if (self.getPred().test(tmpPointer)) return true;
+		while (tmpPointer <= self.getHigher()) {
+			if (self.getPred().test(tmpPointer))
+			{
+				tmpPointer++;
+				return true;
+			}
 			tmpPointer++;
 		}
 		return false;
@@ -24,9 +27,10 @@ public class RangeIterator implements Iterator<Integer> {
 
 	@Override
 	public Integer next() {
-		while(pointer <= self.getHigher())
-		{
-			if (self.getPred().test(pointer)) return pointer;
+		while (pointer <= self.getHigher()) {
+			if (self.getPred().test(pointer)) {
+				return pointer++;
+			}
 			pointer++;
 		}
 		return -1;
