@@ -9,9 +9,9 @@ import org.junit.Test;
 
 import tel_ran.collections.Array;
 import tel_ran.collections.SumConsumer;
-import tel_ran.collections.X;
 import tel_ran.collections.XComparator;
 import tel_ran.collections.predicates.PredicateEven;
+import tel_ran.collections.predicates.X;
 
 public class ArrayTest {
 

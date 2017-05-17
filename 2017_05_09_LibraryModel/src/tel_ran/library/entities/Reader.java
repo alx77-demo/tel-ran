@@ -8,6 +8,14 @@ public class Reader {
 	private String phone;
 	private LocalDate birthDate;
 
+	public Reader(int readerId, String name, String phone, LocalDate birthDate) {
+		super();
+		this.readerId = readerId;
+		this.name = name;
+		this.phone = phone;
+		this.birthDate = birthDate;
+	}
+
 	public int getReaderId() {
 		return readerId;
 	}
@@ -60,24 +68,15 @@ public class Reader {
 		if (getClass() != obj.getClass())
 			return false;
 		Reader other = (Reader) obj;
-		if (birthDate == null) {
-			if (other.birthDate != null)
-				return false;
-		} else if (!birthDate.equals(other.birthDate))
-			return false;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (phone == null) {
-			if (other.phone != null)
-				return false;
-		} else if (!phone.equals(other.phone))
-			return false;
 		if (readerId != other.readerId)
 			return false;
 		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Reader [readerId=" + readerId + ", name=" + name + ", phone=" + phone + ", birthDate=" + birthDate
+				+ "]";
 	}
 
 }

@@ -4,7 +4,15 @@ public class Book {
 	private long isbn;
 	private String title;
 	private String author;
-	public long amount;
+	private long amount;
+
+	public Book(long isbn, String title, String author, long amount) {
+		super();
+		this.isbn = isbn;
+		this.title = title;
+		this.author = author;
+		this.amount = amount;
+	}
 
 	public long getIsbn() {
 		return isbn;
@@ -38,18 +46,6 @@ public class Book {
 		this.amount = amount;
 	}
 
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + (int) (amount ^ (amount >>> 32));
-		result = prime * result + ((author == null) ? 0 : author.hashCode());
-		result = prime * result + (int) (isbn ^ (isbn >>> 32));
-		result = prime * result + ((title == null) ? 0 : title.hashCode());
-		return result;
-	}
-
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -59,19 +55,7 @@ public class Book {
 		if (getClass() != obj.getClass())
 			return false;
 		Book other = (Book) obj;
-		if (amount != other.amount)
-			return false;
-		if (author == null) {
-			if (other.author != null)
-				return false;
-		} else if (!author.equals(other.author))
-			return false;
 		if (isbn != other.isbn)
-			return false;
-		if (title == null) {
-			if (other.title != null)
-				return false;
-		} else if (!title.equals(other.title))
 			return false;
 		return true;
 	}

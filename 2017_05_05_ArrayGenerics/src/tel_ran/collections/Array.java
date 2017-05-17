@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.function.Predicate;
 
 import tel_ran.collections.predicates.PredicateEquals;
+import tel_ran.collections.predicates.X;
 
 public class Array<T> implements Iterable<T> {
 	public final static int CAPACITY = 10;
@@ -160,7 +161,7 @@ public class Array<T> implements Iterable<T> {
 	@SuppressWarnings("unchecked")
 	public Array<T> filter(Predicate<T> predicate) {
 		Array<T> result = new Array<T>();
-		for (int i = size - 1; i >= 0; i--) {
+		for (int i = 0; i < size; i++) {
 			if (predicate.test((T) array[i]))
 				result.add((T) array[i]);
 		}
@@ -215,6 +216,6 @@ public class Array<T> implements Iterable<T> {
 // 2) test Iterable:Iterator
 // 3) test SUM with Iterable:Iterator
 
-//дз (04.05.2017) Array
-//1) Array + generics
-//2) parametrized stack
+// дз (04.05.2017) Array
+// 1) Array + generics
+// 2) parametrized stack

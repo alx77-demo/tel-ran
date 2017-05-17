@@ -8,6 +8,14 @@ public class BookRecord {
 	private LocalDate returnDate;
 	private int readerId;
 
+	public BookRecord(long isbn, LocalDate pickDate, LocalDate returnDate, int readerId) {
+		super();
+		this.isbn = isbn;
+		this.pickDate = pickDate;
+		this.returnDate = returnDate;
+		this.readerId = readerId;
+	}
+
 	public long getIsbn() {
 		return isbn;
 	}
@@ -62,17 +70,7 @@ public class BookRecord {
 		BookRecord other = (BookRecord) obj;
 		if (isbn != other.isbn)
 			return false;
-		if (pickDate == null) {
-			if (other.pickDate != null)
-				return false;
-		} else if (!pickDate.equals(other.pickDate))
-			return false;
 		if (readerId != other.readerId)
-			return false;
-		if (returnDate == null) {
-			if (other.returnDate != null)
-				return false;
-		} else if (!returnDate.equals(other.returnDate))
 			return false;
 		return true;
 	}
