@@ -1,13 +1,11 @@
 package tel_ran.temporal.tests;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjuster;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,17 +23,16 @@ public class TemporalTest {
 		// TemporalUnit unit;
 		// Temporal tmp;
 		// ZonedDateTime zdt;
+		TemporalAdjuster wda = new WorkingDaysAdjuster(new DayOfWeek[] { DayOfWeek.SATURDAY, DayOfWeek.SUNDAY }, 1);
 
-		TemporalAdjuster wda = new WorkingDaysAdjuster(
-				new ArrayList<>(Arrays.asList(DayOfWeek.SATURDAY, DayOfWeek.SUNDAY)));
-
-		LocalDate ld = LocalDate.of(2017, Month.MAY, 22), newDate;
+		LocalDate ld = LocalDate
+				.parse("2017-05-22")/* of(2017, Month.MAY, 22) */, newDate;
 		newDate = ld.with(wda);
 		for (int i = 0; i < 97; i++) {
 			newDate = newDate.with(wda);
 		}
 		System.out.println(newDate);
-		assertEquals(newDate, LocalDate.of(2017, Month.OCTOBER, 5));
+		assertEquals(LocalDate.parse("05/10/2017", DateTimeFormatter.ofPattern("dd/MM/yyyy")), newDate);
 	}
 
 }
