@@ -1,6 +1,8 @@
 package tel_ran.library.controller;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.time.LocalDate;
@@ -14,14 +16,14 @@ import tel_ran.library.protocols.api.RequestType;
 import tel_ran.view.RandomInputConsoleOutput;
 
 public class LibraryRandomClient extends Thread {
-	static RequestType types[]={RequestType.ADD_BOOK,
-			RequestType.ADD_READER,
-				RequestType.GET_BOOK,
-				RequestType.GET_READER,
-				RequestType.REMOVE_BOOK,
-				RequestType.PICK_BOOK,
-				RequestType.RETURN_BOOK,
-				RequestType.GET_NON_RETURNED_RECORDS
+	static String types[]={"addBook",
+			"addReader",
+				"getBook",
+				"getReader",
+				"removeBook",
+				"pickBook",
+				"returnBook",
+				"getNonReturnedRecords"
 		};
 	private static final int IMITATION_PERIOD = 100;
 	private static final int N_AUTHORS = 50;
@@ -66,16 +68,14 @@ public class LibraryRandomClient extends Thread {
 	private void runRequest() {
 		
 		int index=input.getInteger("", 0, types.length);
-		switch(types[index]){
-		case ADD_BOOK:addBook();break;
-		case ADD_READER:addReader();break;
-		case GET_BOOK:getBook();break;
-		case GET_READER:getReader();break;
-		case REMOVE_BOOK:removeBook();break;
-		case PICK_BOOK:pickBook();break;
-		case RETURN_BOOK:returnBook();break;
-		case GET_NON_RETURNED_RECORDS:getNonReturnedRecords();break;
-		default: break;
+		Method m;
+		try {
+			m = getClass().getDeclaredMethod(types[index]);
+			m.invoke(this);
+		} catch (NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
 		}
 		
 	}

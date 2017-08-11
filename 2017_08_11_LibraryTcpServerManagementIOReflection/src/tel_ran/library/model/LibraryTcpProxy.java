@@ -1,19 +1,26 @@
 package tel_ran.library.model;
 
-import java.time.*;
-import java.util.*;
+import static tel_ran.library.protocols.api.LibraryProtocolConstants.DELIMETER;
+import static tel_ran.library.protocols.api.LibraryProtocolConstants.LINE_DELIMETER;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.function.Function;
-import java.net.*;
-import tel_ran.library.entities.*;
+
+import tel_ran.library.entities.Book;
+import tel_ran.library.entities.BookRecord;
 import tel_ran.library.entities.Reader;
-
-import java.io.*;
-
 import tel_ran.library.protocols.api.LibraryProtocolConversions;
-import tel_ran.library.protocols.api.RequestType;
 import tel_ran.library.protocols.api.ResponseCode;
-
-import static tel_ran.library.protocols.api.LibraryProtocolConstants.*;
 @SuppressWarnings("serial")
 public class LibraryTcpProxy extends Library {
 BufferedReader reader;
@@ -26,7 +33,7 @@ private Socket socket;
 		this.socket=socket;
 		reader=new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		writer=new PrintStream(socket.getOutputStream());
-		String request=RequestType.SET_PICK_PERIOD+DELIMETER+pickPeriod;
+		String request="setPickPeriod"+DELIMETER+pickPeriod;
 		writer.println(request);
 		reader.readLine();
 	}
@@ -40,7 +47,7 @@ private Socket socket;
 	@Override
 	public Iterator<Book> iterator() {
 		List<Book> books=new ArrayList<>();
-		String request=RequestType.GET_ALL_BOOKS.toString();
+		String request=new Object(){}.getClass().getEnclosingMethod().getName();
 		
 		try {
 			getResponse(request);
@@ -73,23 +80,23 @@ private Socket socket;
 
 	@Override
 	public boolean addBookItem(Book book) {
-		RequestType type=RequestType.ADD_BOOK;
+		String type=new Object(){}.getClass().getEnclosingMethod().getName();
 		String requestBody=LibraryProtocolConversions.bookToString(book);
 
 		return getBooleanRequest(type, requestBody);
 	}
 
-	private String getRequest(RequestType type, String requestBody) {
+	private String getRequest(String type, String requestBody) {
 		
 		return type+DELIMETER+requestBody;
 	}
 	@Override
 	public boolean addBookExemplar(long isbn)  {
 
-		return getBooleanRequest(RequestType.ADD_EXEMPLAR,
+		return getBooleanRequest(new Object(){}.getClass().getEnclosingMethod().getName(),
 				Long.toString(isbn));
 	}
- private <T>  T getObject(RequestType type,String requestBody,
+ private <T>  T getObject(String type,String requestBody,
 		 Function<String, T> method){
 	 try {
 			getResponse(getRequest(type, requestBody));
@@ -103,14 +110,14 @@ private Socket socket;
 	@Override
 	public boolean removeBook(long isbn) {
 
-		return getBooleanRequest(RequestType.REMOVE_BOOK,
+		return getBooleanRequest(new Object(){}.getClass().getEnclosingMethod().getName(),
 				Long.toString(isbn));
 	}
 
 	@Override
 	public boolean pickBook(long isbn, LocalDate pickDate, int readerId) {
 
-		return getBooleanRequest(RequestType.PICK_BOOK,
+		return getBooleanRequest(new Object(){}.getClass().getEnclosingMethod().getName(),
 				getPickBookRequestBody(isbn,pickDate,readerId));
 	}
 
@@ -120,7 +127,7 @@ private Socket socket;
 	@Override
 	public boolean returnBook(long isbn, int readerId, LocalDate returnDate) {
 
-		return getBooleanRequest(RequestType.RETURN_BOOK, getReturnBookRequestBody(isbn,readerId,returnDate));
+		return getBooleanRequest(new Object(){}.getClass().getEnclosingMethod().getName(), getReturnBookRequestBody(isbn,readerId,returnDate));
 	}
 
 	private String getReturnBookRequestBody(long isbn, int readerId, LocalDate returnDate) {
@@ -129,32 +136,31 @@ private Socket socket;
 	@Override
 	public Iterable<Book> getNonReturnedBooks() {
 
-		return getIterable(RequestType.GET_NON_RETURNED_BOOKS,
+		return getIterable(new Object(){}.getClass().getEnclosingMethod().getName(),
 				"", this::stringToBook);
 	}
 
 	@Override
 	public Iterable<BookRecord> getNonReturnedBookRecords() {
 
-		return getIterable(RequestType.GET_NON_RETURNED_RECORDS,
+		return getIterable(new Object(){}.getClass().getEnclosingMethod().getName(),
 				"", this::stringToRecord);
 	}
 
 	@Override
 	public Iterable<BookRecord> getDelayedBookRecords(LocalDate currentDate) {
 
-		return getIterable(RequestType.GET_DELAYED_RECORDS, "",
+		return getIterable(new Object(){}.getClass().getEnclosingMethod().getName(), "",
 				this::stringToRecord);
 	}
 
 	
 	@Override
 	public Book getBookItem(long isbn) {
-
-		return getObject(RequestType.GET_BOOK, Long.toString(isbn), this::stringToBook);
+		return getObject(new Object(){}.getClass().getEnclosingMethod().getName(), Long.toString(isbn), this::stringToBook);
 		
 	}
-private <T> Iterable<T> getIterable(RequestType type,
+private <T> Iterable<T> getIterable(String type,
 		String requestBody,Function<String, T> method){
 	List<T> result=new ArrayList<>();
 	try {
@@ -171,7 +177,7 @@ private <T> Iterable<T> getIterable(RequestType type,
 	@Override
 	public Iterable<BookRecord> getAllRecords() {
 
-		return getIterable(RequestType.GET_ALL_RECORDS, "", this::stringToRecord);
+		return getIterable(new Object(){}.getClass().getEnclosingMethod().getName(), "", this::stringToRecord);
 	}
 
 	
@@ -180,10 +186,10 @@ private <T> Iterable<T> getIterable(RequestType type,
 	public Iterable<Reader> getReadersDelayedBooks(LocalDate currentDate, int byDays) {
 
 		return getIterable
-		(RequestType.GET_READERS_DELAYED_BOOKS,
+		(new Object(){}.getClass().getEnclosingMethod().getName(),
 		currentDate+DELIMETER+byDays, this::stringToReader);
 	}
-	private  boolean getBooleanRequest(RequestType type,String requestBody) {
+	private  boolean getBooleanRequest(String type,String requestBody) {
 		
 		String request=getRequest(type,requestBody);
 		try {
@@ -199,7 +205,7 @@ private <T> Iterable<T> getIterable(RequestType type,
 
 	@Override
 	public boolean addReader(Reader reader) {
-		RequestType type=RequestType.ADD_READER;
+		String type=new Object(){}.getClass().getEnclosingMethod().getName();
 		String requestBody=LibraryProtocolConversions.readerToString(reader);
 
 		return getBooleanRequest(type, requestBody);
@@ -208,19 +214,19 @@ private <T> Iterable<T> getIterable(RequestType type,
 	@Override
 	public Iterable<Reader> getReaders(long isbn) {
 
-		return getIterable(RequestType.GET_READERS_BOOK,
+		return getIterable(new Object(){}.getClass().getEnclosingMethod().getName(),
 				Long.toString(isbn), this::stringToReader);
 	}
 
 	@Override
 	public Reader getReader(int readerId) {
-		return getObject(RequestType.GET_READER, Integer.toString(readerId), this::stringToReader);
+		return getObject(new Object(){}.getClass().getEnclosingMethod().getName(), Integer.toString(readerId), this::stringToReader);
 	}
 
 	@Override
 	public Iterable<Reader> getAllReaders() {
 
-		return getIterable(RequestType.GET_ALL_READERS,
+		return getIterable(new Object(){}.getClass().getEnclosingMethod().getName(),
 				"", this::stringToReader);
 	}
 
@@ -232,5 +238,4 @@ private <T> Iterable<T> getIterable(RequestType type,
 		}
 		
 	}
-
 }

@@ -1,13 +1,21 @@
 package tel_ran.library.protocols;
-import java.util.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Iterator;
 import java.util.function.Function;
-import java.util.stream.*;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-import tel_ran.library.entities.*;
+import tel_ran.library.entities.Book;
+import tel_ran.library.entities.BookRecord;
+import tel_ran.library.entities.Reader;
 import tel_ran.library.model.Library;
-import tel_ran.library.protocols.api.*;
-
+import tel_ran.library.protocols.api.BooleanResponse;
+import tel_ran.library.protocols.api.LibraryProtocolConstants;
+import tel_ran.library.protocols.api.LibraryProtocolConversions;
+import tel_ran.library.protocols.api.ResponseCode;
 import tel_ran.protocols.Protocol;
 
 public class LibraryProtocol implements Protocol {
@@ -22,65 +30,24 @@ public class LibraryProtocol implements Protocol {
 	public String getResponse(String request) {
 		 synchronized(library){
 			String[] tokens = request.split(LibraryProtocolConstants.DELIMETER);
-			RequestType type;
+			String type;
 			try {
-				type = RequestType.valueOf(tokens[0]);
+				type = tokens[0];
 			} catch (Throwable e) {
 				return ResponseCode.WRONG_REQUEST_TYPE.toString();
 			}
+			System.out.println(type);
 			String response = null;
-			switch (type) {
-			case SET_PICK_PERIOD:
-				response = setPickPeriod(tokens);
-				break;
-			case ADD_BOOK:
-				response = addBook(tokens);
-				break;
-			case ADD_EXEMPLAR:
-				response = addExemplar(tokens);
-				break;
-			case REMOVE_BOOK:
-				response = removeBook(tokens);
-				break;
-			case PICK_BOOK:
-				response = pickBook(tokens);
-				break;
-			case RETURN_BOOK:
-				response = returnBook(tokens);
-				break;
-			case GET_NON_RETURNED_BOOKS:
-				response = getNonReturnedBooks(tokens);
-				break;
-			case GET_NON_RETURNED_RECORDS:
-				response = getNonReturnedRecords(tokens);
-				break;
-			case GET_DELAYED_RECORDS:
-				response = getDelayedRecords(tokens);
-				break;
-			case GET_READERS_DELAYED_BOOKS:
-				response = getReadersDelayedBooks(tokens);
-				break;
-			case ADD_READER:
-				response = addReader(tokens);
-				break;
-			case GET_READERS_BOOK:
-				response = getReaders(tokens);
-				break;
-			case GET_READER:
-				response = getReader(tokens);
-				break;
-			case GET_BOOK:
-				response = getBook(tokens);
-				break;
-			case GET_ALL_READERS:
-				response = getAllReaders(tokens);
-				break;
-			case GET_ALL_RECORDS:
-				response = getAllRecords(tokens);
-				break;
-			case GET_ALL_BOOKS:
-				response = getAllBooks(tokens);
+			Method m;
+			try {
+				m = getClass().getDeclaredMethod(type.toString(), String[].class);
+				response = (String) m.invoke(this, (Object) tokens);
+			} catch (NoSuchMethodException | SecurityException e) {
+				e.printStackTrace();
+			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
 			}
+
 			return response;
 		}
 	}
@@ -133,7 +100,7 @@ public class LibraryProtocol implements Protocol {
 		return getIterableResponse(method,library.getAllReaders());
 	}
 
-	private String getBook(String[] tokens) {
+	private String getBookItem(String[] tokens) {
 		String response="";
 		ResponseCode responseCode=ResponseCode.OK;
 		try {
@@ -221,7 +188,7 @@ public class LibraryProtocol implements Protocol {
 
 	
 
-	private String getDelayedRecords(String[] tokens) {
+	private String getDelayedBookRecords(String[] tokens) {
 		
 		try {
 			LocalDate currentDate=LocalDate.parse(tokens[1]);
@@ -234,7 +201,7 @@ public class LibraryProtocol implements Protocol {
 		
 	}
 
-	private String getNonReturnedRecords(String[] tokens) {
+	private String getNonReturnedBookRecords(String[] tokens) {
 		
 		try {
 			Iterable<BookRecord> records=library.getNonReturnedBookRecords();
@@ -302,7 +269,7 @@ public class LibraryProtocol implements Protocol {
 		return getResponseWithCode(code, response);
 	}
 
-	private String addExemplar(String[] tokens) {
+	private String addBookExemplar(String[] tokens) {
 		ResponseCode code=ResponseCode.OK;
 		String response="";
 		long isbn=Long.parseLong(tokens[1]);
@@ -312,7 +279,7 @@ public class LibraryProtocol implements Protocol {
 		return getResponseWithCode(code, response);
 	}
 
-	private String addBook(String[] tokens) {
+	private String addBookItem(String[] tokens) {
 		ResponseCode code=ResponseCode.ERROR;
 		String response="";
 		Book book=LibraryProtocolConversions.stringToBook(Arrays.copyOfRange(tokens, 1, tokens.length));
@@ -324,5 +291,4 @@ public class LibraryProtocol implements Protocol {
 		}
 		return getResponseWithCode(code, response);
 	}
-
 }
