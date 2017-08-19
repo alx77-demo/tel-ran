@@ -50,7 +50,7 @@ public class FilterTestApp {
 	}
 
 	private static void displayEvenNumbersSumTimeSimple(List<Integer> numbers) {
-		Instant start = Instant.now();
+		Instant startPoint = Instant.now();
 		int res = 0;
 
 		for (int i = 0; i < N_RUNS; i++) {
@@ -60,8 +60,8 @@ public class FilterTestApp {
 			}
 		}
 
-		Instant end = Instant.now();
-		System.out.println("res:" + res + " time:" + ChronoUnit.MILLIS.between(start, end));
+		Instant endPoint = Instant.now();
+		System.out.println("res:" + res + " time:" + ChronoUnit.MILLIS.between(startPoint, endPoint));
 	}
 
 	private static void displayEvenNumbersSumTimeNoStream(List<Integer> numbers) {
